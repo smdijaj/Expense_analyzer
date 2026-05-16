@@ -37,3 +37,11 @@ main.py
 - Flask integration
 - Real-world dataset
 - ML predictions
+
+## Screenshots
+
+### Dashboard
+![Dashboard](screenshots/dashboard.png)
+
+### Filter Example
+![Filter](screenshots/food_filter.png)

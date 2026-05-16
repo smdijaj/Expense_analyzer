@@ -30,19 +30,29 @@ def home():
     total = df["amount"].sum() if not df.empty else 0
 
     html = f"""
-    <h1>Expense Analyzer Dashboard</h1>
+<h1>Expense Analyzer Dashboard</h1>
 
-    <form>
-        <input name="category" placeholder="Food / Travel / Bills">
-        <button type="submit">Filter</button>
-    </form>
+<form>
+    <input name="category" placeholder="Food / Travel / Bills">
+    <button type="submit">Filter</button>
+</form>
 
-    <h3>Total: {total}</h3>
+<h3>Total: {total}</h3>
 
-    <img src="/static/category_chart.png" width="600">
+<div style="display:flex; gap:30px; align-items:flex-start;">
 
-    {df.to_html(index=False)}
-    """
+    <div>
+        <h2>Chart</h2>
+        <img src="/static/category_chart.png" width="500">
+    </div>
+
+    <div>
+        <h2>Data</h2>
+        {df.to_html(index=False)}
+    </div>
+
+</div>
+"""
 
     return html
 
