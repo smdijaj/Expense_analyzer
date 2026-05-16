@@ -10,7 +10,17 @@ def home():
     df = pd.read_sql("SELECT * FROM expenses", conn)
     conn.close()
 
-    return df.to_html()
+    total = df["amount"].sum()
+    average = df["amount"].mean()
+
+    html = f"""
+    <h1>Expense Analyzer Dashboard</h1>
+    <h3>Total Spending: {total}</h3>
+    <h3>Average Spending: {average:.2f}</h3>
+    {df.to_html(index=False)}
+    """
+
+    return html
 
 if __name__ == "__main__":
     app.run(debug=True)
