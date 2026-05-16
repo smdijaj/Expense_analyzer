@@ -1,4 +1,4 @@
-from flask import Flask
+from flask import Flask, request
 import sqlite3
 import pandas as pd
 
@@ -6,24 +6,37 @@ app = Flask(__name__)
 
 @app.route("/")
 def home():
+    category = request.args.get("category")
+
     conn = sqlite3.connect("database/expenses.db")
-    df = pd.read_sql("SELECT * FROM expenses", conn)
+
+    if category:
+        df = pd.read_sql(
+            "SELECT * FROM expenses WHERE category = ?",
+            conn,
+            params=(category,)
+        )
+    else:
+        df = pd.read_sql("SELECT * FROM expenses", conn)
+
     conn.close()
 
     total = df["amount"].sum()
-    average = df["amount"].mean()
 
     html = f"""
-<h1>Expense Analyzer Dashboard</h1>
-<h3>Total Spending: {total}</h3>
-<h3>Average Spending: {average:.2f}</h3>
+    <h1>Expense Analyzer Dashboard</h1>
 
-<h2>Category Chart</h2>
-<img src="/static/category_chart.png" width="600">
+    <form>
+        <input name="category" placeholder="Food / Travel / Bills">
+        <button type="submit">Filter</button>
+    </form>
 
-<h2>Data</h2>
-{df.to_html(index=False)}
-"""
+    <h3>Total: {total}</h3>
+
+    <img src="/static/category_chart.png" width="600">
+
+    {df.to_html(index=False)}
+    """
 
     return html
 
