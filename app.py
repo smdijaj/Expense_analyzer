@@ -1,6 +1,7 @@
 from flask import Flask, request
 import sqlite3
 import pandas as pd
+import matplotlib.pyplot as plt
 
 app = Flask(__name__)
 
@@ -11,17 +12,22 @@ def home():
     conn = sqlite3.connect("database/expenses.db")
 
     if category:
-        df = pd.read_sql(
-            "SELECT * FROM expenses WHERE category = ?",
-            conn,
-            params=(category,)
-        )
+        query = "SELECT * FROM expenses WHERE LOWER(category)=LOWER(?)"
+        df = pd.read_sql(query, conn, params=(category.strip(),))
     else:
         df = pd.read_sql("SELECT * FROM expenses", conn)
 
     conn.close()
 
-    total = df["amount"].sum()
+    if not df.empty:
+        summary = df.groupby("category")["amount"].sum()
+        plt.figure()
+        summary.plot(kind="bar")
+        plt.tight_layout()
+        plt.savefig("static/category_chart.png")
+        plt.close()
+
+    total = df["amount"].sum() if not df.empty else 0
 
     html = f"""
     <h1>Expense Analyzer Dashboard</h1>
