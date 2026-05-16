@@ -14,11 +14,16 @@ def home():
     average = df["amount"].mean()
 
     html = f"""
-    <h1>Expense Analyzer Dashboard</h1>
-    <h3>Total Spending: {total}</h3>
-    <h3>Average Spending: {average:.2f}</h3>
-    {df.to_html(index=False)}
-    """
+<h1>Expense Analyzer Dashboard</h1>
+<h3>Total Spending: {total}</h3>
+<h3>Average Spending: {average:.2f}</h3>
+
+<h2>Category Chart</h2>
+<img src="/static/category_chart.png" width="600">
+
+<h2>Data</h2>
+{df.to_html(index=False)}
+"""
 
     return html
 
